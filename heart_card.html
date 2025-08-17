@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pixel Love Card</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: #ffe6f0;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      overflow: hidden;
+      border: 12px solid #ff1a75;
+      outline: 6px solid #000;
+      margin: 0;
+    }
+
+    /* Stickman */
+    .stickman {
+      position: relative;
+      margin-top: 40px;
+    }
+    .stickman img {
+      width: 250px;
+    }
+
+    /* Floating hearts */
+    .floating-heart {
+      position: absolute;
+      color: #ff4d88;
+      opacity: 0;
+      animation: floatUp 6s linear forwards, drift 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-220px) scale(1.5); opacity: 0; }
+    }
+
+    @keyframes drift {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(30px); }
+    }
+
+    /* Pixel Love Message */
+    .message {
+      font-size: 20px;
+      margin-top: 30px;
+      animation: bounce 2s infinite, rainbow 5s infinite linear;
+      text-shadow: 2px 2px #000, -2px -2px #fff;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes rainbow {
+      0%   { color: #ff1a75; }
+      25%  { color: #ff9900; }
+      50%  { color: #33cc33; }
+      75%  { color: #3399ff; }
+      100% { color: #ff1a75; }
+    }
+
+    /* Pixel emojis */
+    .emoji {
+      font-size: 22px;
+      margin: 0 5px;
+      display: inline-block;
+      animation: wiggle 1s infinite;
+      filter: contrast(200%) saturate(150%) blur(0.5px);
+      image-rendering: pixelated;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-10deg); }
+      75% { transform: rotate(10deg); }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      opacity: 1;
+      animation: confetti-fall 6s linear forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    /* Click pop hearts */
+    .pop-heart {
+      position: absolute;
+      font-size: 40px;
+      animation: pop 1s forwards;
+      pointer-events: none;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Stickman -->
+  <div class="stickman">
+    <img src="stickman.png" alt="Stickman">
+  </div>
+
+  <!-- Floating hearts container -->
+  <div id="hearts-container"></div>
+
+  <!-- Pixel Love message -->
+  <div class="message">
+    abiu
+    <span class="emoji">😉</span>
+  </div>
+
+  <!-- Retro click sound -->
+  <audio id="clickSound" src="coin.wav" preload="auto"></audio>
+
+  <script>
+    // Floating hearts
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("floating-heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 90 + "%";
+      heart.style.fontSize = Math.random() * 20 + 25 + "px";
+
+      const floatDuration = Math.random() * 3 + 4;
+      const driftDuration = Math.random() * 2 + 2;
+      heart.style.animationDuration = `${floatDuration}s, ${driftDuration}s`;
+
+      document.getElementById("hearts-container").appendChild(heart);
+
+      setTimeout(() => heart.remove(), floatDuration * 1000);
+    }
+    setInterval(createHeart, 800);
+
+    // Confetti
+    function createConfetti() {
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+      confetti.style.left = Math.random() * 100 + "%";
+      confetti.style.top = "100%";
+      confetti.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      confetti.style.animationDuration = (Math.random() * 3 + 3) + "s";
+
+      document.getElementById("hearts-container").appendChild(confetti);
+      setTimeout(() => confetti.remove(), 6000);
+    }
+    setInterval(createConfetti, 500);
+
+    // Click = pop heart
+    document.body.addEventListener("click", (e) => {
+      const heart = document.createElement("div");
+      heart.classList.add("pop-heart");
+      heart.innerHTML = "💖";
+      heart.style.left = e.pageX + "px";
+      heart.style.top = e.pageY + "px";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 1000);
+
+      // Play retro click sound
+      const sound = document.getElementById("clickSound");
+      sound.currentTime = 0;
+      sound.play();
+    });
+  </script>
+</body>
+</html>
